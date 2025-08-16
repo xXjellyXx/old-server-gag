@@ -166,7 +166,7 @@ export default function HomePage() {
                 FIND OLD SERVERS
               </h1>
               <h2
-                className="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-red-500 via-red-600 to-red-700 mb-4 transform rotate-1"
+                className="text-3xl font-green text-transparent bg-clip-text bg-gradient-to-r from-red-500 via-red-600 to-red-700 mb-4 transform rotate-1"
                 style={{
                   textShadow: "3px 3px 0px #000, -1px -1px 0px #000, 1px -1px 0px #000, -1px 1px 0px #000",
                   filter: "drop-shadow(2px 2px 4px rgba(0,0,0,0.3))",
