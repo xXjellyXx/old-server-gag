@@ -22,6 +22,25 @@ export const metadata: Metadata = {
   title: "Grow a Garden - Find Old Servers",
   description: "Join old Grow a Garden servers on Roblox",
   generator: "v0.app",
+  openGraph: {
+    title: "Grow a Garden - Find Old Servers",
+    description: "Join old Grow a Garden servers on Roblox",
+    url: "https://v0-grow-a-garden-website-beta.vercel.app/",
+    images: [
+      {
+        url: "https://v0-grow-a-garden-website-beta.vercel.app/thumbnail.jpg", // Public folder image
+        width: 1200,
+        height: 630,
+        alt: "Grow a Garden Thumbnail",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Grow a Garden - Find Old Servers",
+    description: "Join old Grow a Garden servers on Roblox",
+    images: ["https://v0-grow-a-garden-website-beta.vercel.app/thumbnail.jpg"],
+  },
 }
 
 export default function RootLayout({
