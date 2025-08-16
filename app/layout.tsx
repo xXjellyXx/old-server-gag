@@ -30,7 +30,7 @@ export const metadata: Metadata = {
       {
         url: "https://v0-grow-a-garden-website-beta.vercel.app/thumbnail.jpg", // Public folder image
         width: 1200,
-        height: 630,
+        height: 620,
         alt: "Grow a Garden Thumbnail",
       },
     ],
