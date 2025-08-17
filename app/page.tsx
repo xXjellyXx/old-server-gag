@@ -111,7 +111,7 @@ export default function HomePage() {
 
   const handleJoinServer = () => {
     window.open(
-      "https://www.robiox.com.es/games/126884695634066/Grow-a-Garden?privateServerLinkCode=14443333941453900356775685260799",
+      "https://www.robiox.com.es/games/126884695634066/Grow-a-Garden?privateServerLinkCode=19506960972628056881014833593604",
       "_blank",
     )
   }
