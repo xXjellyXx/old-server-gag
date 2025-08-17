@@ -25,10 +25,10 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Grow a Garden - Find Old Servers",
     description: "Join old Grow a Garden servers on Roblox",
-    url: "https://v0-grow-a-garden-website-beta.vercel.app/",
+    url: "https://growagarden-serverfinder.vercel.app/",
     images: [
       {
-        url: "https://v0-grow-a-garden-website-beta.vercel.app/thumbnail.jpg", // Public folder image
+        url: "https://growagarden-serverfinder.vercel.app/thumbnail.jpg", // Public folder image
         width: 1200,
         height: 620,
         alt: "Grow a Garden Thumbnail",
