@@ -39,7 +39,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Grow a Garden - Find Old Servers",
     description: "Join old Grow a Garden servers on Roblox",
-    images: ["https://v0-grow-a-garden-website-beta.vercel.app/thumbnail.jpg"],
+    images: ["https://growagarden-serverfinder.vercel.app/thumbnail.jpg"],
   },
 }
 
