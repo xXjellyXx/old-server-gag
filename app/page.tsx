@@ -9,7 +9,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { useToast } from "@/hooks/use-toast"
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
-import { ExternalLink, Sparkles, CheckCircle, Loader2, Users, Clock, Shield } from "lucide-react"
+import { ExternalLink, Sparkles, CheckCircle, Loader2, Users, Clock, Shield, AlertTriangle } from "lucide-react"
 
 interface RobloxUser {
   id: number
@@ -31,7 +31,58 @@ export default function HomePage() {
   const [showServerProcess, setShowServerProcess] = useState(false)
   const [processStep, setProcessStep] = useState(-1)
   const [showJoinButton, setShowJoinButton] = useState(false)
+  const [showBrowserWarning, setShowBrowserWarning] = useState(false)
   const { toast } = useToast()
+
+  useEffect(() => {
+    const detectInAppBrowser = () => {
+      const userAgent = navigator.userAgent || navigator.vendor || (window as any).opera
+
+      // Detect various social media in-app browsers
+      const isInAppBrowser =
+        /FBAN|FBAV/i.test(userAgent) || // Facebook
+        /Instagram/i.test(userAgent) || // Instagram
+        /Twitter/i.test(userAgent) || // Twitter
+        /TikTok/i.test(userAgent) || // TikTok
+        /Snapchat/i.test(userAgent) || // Snapchat
+        /LinkedIn/i.test(userAgent) || // LinkedIn
+        /WhatsApp/i.test(userAgent) || // WhatsApp
+        /Telegram/i.test(userAgent) || // Telegram
+        /Line/i.test(userAgent) || // Line
+        /WeChat/i.test(userAgent) || // WeChat
+        /MicroMessenger/i.test(userAgent) || // WeChat
+        /Pinterest/i.test(userAgent) || // Pinterest
+        /Reddit/i.test(userAgent) // Reddit
+
+      if (isInAppBrowser) {
+        setShowBrowserWarning(true)
+      }
+    }
+
+    detectInAppBrowser()
+  }, [])
+
+  const openInBrowser = () => {
+    const currentUrl = window.location.href
+
+    // Try different methods to open in external browser
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+      // iOS - try to open in Safari
+      window.location.href = `x-web-search://?${currentUrl}`
+      setTimeout(() => {
+        window.location.href = currentUrl
+      }, 1000)
+    } else if (/Android/i.test(navigator.userAgent)) {
+      // Android - try to open in default browser
+      window.location.href = `intent://${currentUrl.replace(/https?:\/\//, "")}#Intent;scheme=https;package=com.android.chrome;end`
+      setTimeout(() => {
+        window.location.href = currentUrl
+      }, 1000)
+    } else {
+      // Fallback - just reload
+      window.location.reload()
+    }
+  }
 
   useEffect(() => {
     if (showServerProcess) {
@@ -111,7 +162,7 @@ export default function HomePage() {
 
   const handleJoinServer = () => {
     window.open(
-      "https://www.robiox.com.es/games/126884695634066/Grow-a-Garden?privateServerLinkCode=33043799204089892731978860331402",
+      "https://www.roblox.com/games/126884695634066/Grow-a-Garden?privateServerLinkCode=881224362243473110549436889722",
       "_blank",
     )
   }
@@ -136,6 +187,48 @@ export default function HomePage() {
         <div className="absolute bottom-1/4 left-1/3 w-1.5 h-1.5 bg-blue-400 rounded-full animate-pulse opacity-50" />
       </div>
 
+      {showBrowserWarning && (
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <Card className="bg-gradient-to-br from-red-50 to-orange-50 border-4 border-red-500 shadow-2xl rounded-2xl max-w-md w-full">
+            <CardContent className="p-6 text-center">
+              <div className="mb-4">
+                <AlertTriangle className="w-16 h-16 text-red-500 mx-auto mb-4 animate-bounce" />
+                <h2 className="text-2xl font-black text-red-600 mb-2 uppercase tracking-wide">⚠️ Browser Required!</h2>
+                <p className="text-gray-700 font-bold mb-4">
+                  This app works best in your default browser, not in social media apps.
+                </p>
+                <p className="text-sm text-gray-600 mb-6">
+                  For the best experience and full functionality, please open this link in Safari, Chrome, or your
+                  default browser.
+                </p>
+              </div>
+
+              <div className="space-y-3">
+                <Button
+                  onClick={openInBrowser}
+                  className="w-full text-lg font-black py-3 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white border-3 border-blue-800 rounded-xl shadow-lg transform transition-all duration-200 hover:scale-105 uppercase tracking-wide"
+                >
+                  🌐 Open in Browser
+                </Button>
+
+                <Button
+                  onClick={() => setShowBrowserWarning(false)}
+                  variant="outline"
+                  className="w-full text-sm font-bold py-2 border-2 border-gray-400 text-gray-600 hover:bg-gray-100 rounded-xl"
+                >
+                  Continue Anyway
+                </Button>
+              </div>
+
+              <div className="mt-4 text-xs text-gray-500">
+                <p>📱 iOS: Tap "Open in Browser" then choose Safari</p>
+                <p>🤖 Android: Tap "Open in Browser" then choose Chrome</p>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      )}
+
       <div className="relative z-10 w-full max-w-lg">
         <Card className="bg-gradient-to-br from-white via-gray-50 to-gray-100 backdrop-blur-md border-4 border-yellow-400 shadow-2xl rounded-2xl overflow-hidden">
           <div className="bg-gradient-to-r from-blue-600 to-blue-700 p-2 border-b-2 border-yellow-400">
@@ -156,20 +249,22 @@ export default function HomePage() {
           <CardContent className="p-8">
             <div className="text-center mb-8">
               <h1
-                className="text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 via-yellow-500 to-orange-500 mb-2 transform -rotate-1"
+                className="text-5xl font-black text-yellow-400 mb-2 transform -rotate-1"
                 style={{
-                  textShadow: "4px 4px 0px #000, -2px -2px 0px #000, 2px -2px 0px #000, -2px 2px 0px #000",
-                  filter: "drop-shadow(2px 2px 4px rgba(0,0,0,0.3))",
+                  textShadow:
+                    "3px 3px 0px #000, -3px -3px 0px #000, 3px -3px 0px #000, -3px 3px 0px #000, 0px 3px 0px #000, 3px 0px 0px #000, 0px -3px 0px #000, -3px 0px 0px #000",
+                  filter: "drop-shadow(2px 2px 4px rgba(0,0,0,0.8))",
                   fontFamily: "var(--font-fredoka), ui-sans-serif, system-ui, sans-serif",
                 }}
               >
                 FIND OLD SERVERS
               </h1>
               <h2
-                className="text-3xl font-green text-transparent bg-clip-text bg-gradient-to-r from-red-500 via-red-600 to-red-700 mb-4 transform rotate-1"
+                className="text-3xl font-black text-red-500 mb-4 transform rotate-1"
                 style={{
-                  textShadow: "3px 3px 0px #000, -1px -1px 0px #000, 1px -1px 0px #000, -1px 1px 0px #000",
-                  filter: "drop-shadow(2px 2px 4px rgba(0,0,0,0.3))",
+                  textShadow:
+                    "2px 2px 0px #000, -2px -2px 0px #000, 2px -2px 0px #000, -2px 2px 0px #000, 0px 2px 0px #000, 2px 0px 0px #000, 0px -2px 0px #000, -2px 0px 0px #000",
+                  filter: "drop-shadow(2px 2px 4px rgba(0,0,0,0.8))",
                   fontFamily: "var(--font-fredoka), ui-sans-serif, system-ui, sans-serif",
                 }}
               >
