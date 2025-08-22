@@ -1,33 +1,52 @@
-import type React from "react"
-import type { Metadata } from "next"
-import { Nunito_Sans, Fredoka } from "next/font/google"
-import "./globals.css"
-import { Toaster } from "@/components/ui/toaster"
+import type React from "react";
+import type { Metadata } from "next";
+import { Nunito_Sans, Fredoka } from "next/font/google";
+import "./globals.css";
+import { Toaster } from "@/components/ui/toaster";
 
 const nunitoSans = Nunito_Sans({
   subsets: ["latin"],
   display: "swap",
   variable: "--font-nunito",
   weight: ["400", "600", "700", "800", "900"],
-})
+});
 
 const fredoka = Fredoka({
   subsets: ["latin"],
   display: "swap",
   variable: "--font-fredoka",
   weight: ["400", "500", "600", "700"],
-})
+});
 
 export const metadata: Metadata = {
   title: "Grow a Garden - Find Old Servers",
   description: "Join old Grow a Garden servers on Roblox",
-  generator: "v0.app",
-}
+  generator: "Grow A Garden App",
+  openGraph: {
+    title: "Grow a Garden - Find Old Servers",
+    description: "Join old Grow a Garden servers on Roblox",
+    url: "https://growagarden-serverfinder.vercel.app/",
+    images: [
+      {
+        url: "https://growagarden-serverfinder.vercel.app/thumbnail.jpg", // Update: your final domain
+        width: 1200,
+        height: 630,
+        alt: "Grow a Garden Thumbnail",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Grow a Garden - Find Old Servers",
+    description: "Join old Grow a Garden servers on Roblox",
+    images: ["https://growagarden-serverfinder.vercel.app/thumbnail.jpg"],
+  },
+};
 
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode
+  children: React.ReactNode;
 }>) {
   return (
     <html lang="en" className={`${nunitoSans.variable} ${fredoka.variable}`}>
@@ -45,5 +64,5 @@ html {
         <Toaster />
       </body>
     </html>
-  )
+  );
 }
