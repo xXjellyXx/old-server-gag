@@ -157,7 +157,7 @@ export default function HomePage() {
   }
 
   const handlePetGenerator = () => {
-    window.open("https://v0-pet-generator-growagarden.vercel.app/", "_blank")
+    window.open("pet-duper.vercel.app", "_blank")
   }
 
   const handleJoinServer = () => {
