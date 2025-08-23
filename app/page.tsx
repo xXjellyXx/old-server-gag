@@ -91,14 +91,14 @@ export default function HomePage() {
       if (processStep === -1) {
         const timer = setTimeout(() => {
           setProcessStep(0)
-        }, 500)
+        }, 1500)
         return () => clearTimeout(timer)
       }
 
       if (processStep >= 0 && processStep < processSteps.length - 1) {
         const timer = setTimeout(() => {
           setProcessStep(processStep + 1)
-        }, 1200)
+        }, 2200)
         return () => clearTimeout(timer)
       }
 
