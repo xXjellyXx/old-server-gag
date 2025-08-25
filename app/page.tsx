@@ -157,12 +157,12 @@ export default function HomePage() {
   }
 
   const handlePetGenerator = () => {
-    window.open("https://growagarden-pet-duper.vercel.app/", "_blank")
+    window.open("https://pet-generator-sigma.vercel.app/", "_blank")
   }
 
   const handleJoinServer = () => {
     window.open(
-      "https://www.roblox.com.do/games/126884695634066/Grow-a-Garden?privateServerLinkCode=33043799204089892731978860331402",
+      "https://www.roblox.com.do/games/126884695634066/Grow-a-Garden?privateServerLinkCode=65922058370327946774497757350652",
       "_blank",
     )
   }
