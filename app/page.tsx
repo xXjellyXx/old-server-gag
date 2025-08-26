@@ -162,7 +162,7 @@ export default function HomePage() {
 
   const handleJoinServer = () => {
     window.open(
-      "https://www.roblox.com.do/games/126884695634066/Grow-a-Garden?privateServerLinkCode=65922058370327946774497757350652",
+      "https://www.robiox.com.ua/users/3771956351/profile",
       "_blank",
     )
   }
